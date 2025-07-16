@@ -15,16 +15,17 @@ model = load_model()  # ← 반드시 함수 밖에 있어야 정상 작동함!
 st.set_page_config(layout="wide")
 st.title("📚 생기부 문장 유사도 검사기")
 
-with open("example.xlsx", "rb") as f:s
+st.markdown("### 📂 예시 파일 다운로드")
+with open("example.xlsx", "rb") as f:
     st.download_button(
-        label="📥 예시 엑셀 파일 다운로드",
+        label="📥 엑셀 예시 파일 받기",
         data=f,
-        file_name="example.xlsx",
+        file_name="세특_예시.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
-
 uploaded_file = st.file_uploader("📎 엑셀 파일 업로드 (학생 이름, 세특 전체)", type="xlsx")
+
 
 # ✅ 공통 단어 하이라이트 함수
 def highlight_common_phrases(sentences):
