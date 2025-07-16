@@ -80,7 +80,7 @@ if uploaded_file:
             m = meta[i]
             s = m["문장"]
             scores = sim_matrix[i]
-            has_similar = any(scores[j] >= 0.95 and meta[j]["학생"] != selected_student for j in range(len(meta)))
+            has_similar = any(scores[j] >= 0.9 and meta[j]["학생"] != selected_student for j in range(len(meta)))
             if has_similar:
                 if st.button(f"⭐ {s}", key=f"{i}"):
                     clicked_sentence = m["문장"]
@@ -96,7 +96,7 @@ if uploaded_file:
             sims = sim_matrix[clicked_idx]
             similar_list = []
             for i, score in enumerate(sims):
-                if meta[i]["학생"] != selected_student and score >= 0.95:
+                if meta[i]["학생"] != selected_student and score >= 0.9:
                     similar_list.append({
                         "학생": meta[i]["학생"],
                         "문장": meta[i]["문장"],
@@ -106,7 +106,7 @@ if uploaded_file:
             st.dataframe(sim_df, use_container_width=True)
 
     with tab2:
-        st.header("👥 유사 학생 그룹(0.95 이상)")
+        st.header("👥 유사 학생 그룹(0.9 이상)")
 
         # 학생 단위 전체 세특 유사도
         full_texts = [row["세특 전체"] for _, row in df.iterrows()]
@@ -114,7 +114,7 @@ if uploaded_file:
         stu_sim = util.cos_sim(stu_embeddings, stu_embeddings).cpu().numpy()
         stu_names = df["학생 이름"].tolist()
 
-        threshold = 0.95
+        threshold = 0.9
         adj = {name: set() for name in stu_names}
         for i in range(len(stu_names)):
             for j in range(i + 1, len(stu_names)):
@@ -149,13 +149,13 @@ if uploaded_file:
         selected_group = groups[selected_idx]
 
         st.markdown("---")
-        st.subheader("📄 선택한 그룹의 유사 문장 모음 (0.95 이상)")
+        st.subheader("📄 선택한 그룹의 유사 문장 모음 (0.9 이상)")
 
         sent_graph = defaultdict(set)
         for i in range(len(meta)):
             for j in range(i + 1, len(meta)):
                 if meta[i]["학생"] in selected_group and meta[j]["학생"] in selected_group:
-                    if sim_matrix[i][j] >= 0.95:
+                    if sim_matrix[i][j] >= 0.9:
                         sent_graph[i].add(j)
                         sent_graph[j].add(i)
 
@@ -176,7 +176,7 @@ if uploaded_file:
                     components.append(comp)
 
         if not components:
-            st.info("0.95 이상의 유사 문장 그룹이 없습니다.")
+            st.info("0.9 이상의 유사 문장 그룹이 없습니다.")
         else:
             for idx, comp in enumerate(components, 1):
                 st.markdown(f"### 🔹 문장 그룹 {idx}")
